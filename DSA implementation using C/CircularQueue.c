@@ -1,90 +1,107 @@
-//Circular Queue over an array 
-#include<stdio.h>
-
-#define MAX 5
-#define TRUE 1
-#define FALSE 0
-
-struct cqueue
+/* A more easy to understand code and also a menu driven program*/
+#include <stdio.h>
+#include<stdlib.h>
+int head=0,tail=0,size;
+void insert(int ar[],int value)         //to insert in the circular queue
 {
-    int data[MAX];
-    int front;
-    int rear;
-}typedef cqueue;
-
-int isEmpty(cqueue s)
-{
-    if(s.front==-1)
-        return TRUE;
-    else
-        return FALSE;
-}
-
-int isFull(cqueue s)
-{
-    if((s.rear+1)%MAX==s.front) //to check if front is 1 step ahead of rear
-        return TRUE;
-    else
-        return FALSE;
-}
-
-int add(cqueue *s,int element)
-{
-    if(isFull(*s))
+    if((tail+1)%size==head)
     {
-        printf("\nCannot add in queue, queue full!\n");
-        return 0;
+        printf("\nOverflow\n");
+        
     }
-s->rear=(s->rear+1)%MAX; // move rear one step ahead and % is because to move in circular path
-s->data[s->rear]=element; //add element
-if(s->front==-1) //bringing front to 0, if first element added
-    s->front=0; //set to 0th position in array
-printf("\nAdded element is : %d",element);
+    else{
+       
+       tail=(tail+1)%size;
+        ar[tail]=value;
+    }
 }
-
-int delete(cqueue *s)
+int removed(int ar[])                   //to delete from the circular queue
 {
-    if(isEmpty(*s))
+    if(head==tail)
     {
-        printf("\nCannot delete, queue empty!\n\n");
+        
         return -1;
     }
-int rem_element=s->data[s->front]; //to capture removed element
-if(s->front==s->rear)   //if only one element present
-{   
-    //reset to initial conditions, as queue is empty
-    s->front=-1;
-    s->rear=-1;
+    else{
+        head++;
+        head=head%size;
+        int x= ar[head];
+       
+        
+         
+        return x;
+    }
 }
-else //move front to 1 step ahead
-    s->front=(s->front+1)%MAX;
-return rem_element;
+void display(int ar[])                  //to display the elements of  the circular queue
+{
+    
+    if ((head+1)%size>tail)
+    {
+        for(int i=0;i<=tail;i++)
+        {
+            printf("%d ",ar[i]);
+        }
+        for (int j=(head+1);j<size;j++)
+        {
+            printf("%d ",ar[j]);
+        }
+    }
+    else{
+        for(int i=head+1;i<=tail;i++)
+        {
+            printf("%d ",ar[i]);
+        }
+    }
+    printf("\n");
 }
-
 int main()
 {
-    cqueue s;
-    s.front=-1;
-    s.rear=-1;
-    isEmpty(s);
-    add(&s,100);
-    printf("\nFront at = %d and Rear at = %d,",s.front,s.rear);
-    add(&s,200);
-    printf("\nFront at = %d and Rear at = %d",s.front,s.rear);
-    add(&s,300);
-    printf("\nFront at = %d and Rear at = %d",s.front,s.rear);
-    printf("\nDeleted element is : %d\n",delete(&s));
-    printf("\nFront at = %d and Rear at = %d",s.front,s.rear);
-    add(&s,400);
-    printf("\nFront at = %d and Rear at = %d",s.front,s.rear);
-    add(&s,500);
-    printf("\nFront at = %d and Rear at = %d",s.front,s.rear);
-    add(&s,600);
-    printf("\nFront at = %d and Rear at = %d",s.front,s.rear);
-    add(&s,700);
-    printf("\nFront at = %d and Rear at = %d",s.front,s.rear);
-    printf("\nDeleted element is : %d\n",delete(&s));
-    printf("\nFront at = %d and Rear at = %d",s.front,s.rear);
-    printf("\nDeleted element is : %d\n",delete(&s));
-    printf("\nFront at = %d and Rear at = %d\n",s.front,s.rear);
+    
+    printf("Enter the size of the array:");
+    scanf("%d",&size);
+    size++;
+    int ar[size];
+    while(1)
+    {
+     int c;
+        printf("MAIN MENU:\n");
+        printf("1.Insert\n");
+        printf("2.Remove\n");
+        printf("3.Display\n");
+        printf("4.Exit\n");
+        printf("Enter your choice:");
+        scanf("%d",&c);
+        int a,p;
+        switch(c)                                       //Menu driven program ...more friendly to the user
+        {
+            case 1:
+            
+            printf("Enter the element to be inserted:");
+            scanf("%d",&a);
+            insert(ar,a);
+            break;
+            case 2:
+            
+            p=removed(ar);
+            if(p==-1)
+            {
+                printf("\nQueue Underflow:\n");
+            }
+            else
+            {printf("\nRemoved element: %d\n",p);}
+            
+            break;
+            case 3:
+            printf("\nCircular Queue:\n");
+            display(ar);
+            break;
+            case 4:
+            exit(0);
+            break;
+            default:
+            printf("\nWrong Choice.Enter again.\n");
+            break;
+        }
+    }
+    return 0;
 }
